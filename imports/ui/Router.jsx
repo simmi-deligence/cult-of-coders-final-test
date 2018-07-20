@@ -14,7 +14,7 @@ import Login from './pages/Users/Login';
 export default () =>
     <App>
        
-        <Route exact path="/" component={Home} />
+        <Route exact path="/" component={Login} />
         <Route exact path="/posts" component={PostList} />
         <Route exact path="/posts/reactive" component={PostListReactive} />
         <Route exact path="/posts/create" component={PostCreate} />

@@ -9,33 +9,25 @@ export default class PostEdit extends React.Component {
     }
 
     componentDidMount() {
-        Meteor.call('post.get', this.props.match.params._id, (err, post) => {
+        Meteor.call('secured.post_get', this.props.match.params._id, (err, post) => {
             this.setState({post});
         });
     }
 
     handleSubmit = (post) => {
-        Meteor.call('post.edit', this.props.match.params._id, post, (err) => {
+        Meteor.call('secured.post_edit', this.props.match.params._id, post, (err) => {
             if (err) {
                 return alert(err.reason);
             }
+            //alert('Post modified!')
         });
-        this.props.history.push('/posts');
+        this.props.history.push('/posts/reactive');
     };
 
     render() {
         const {history} = this.props;
         const {post} = this.state;
-         const optionsArray = [
-                                { label: "Select Type", value :"" },
-                                { label: "Nature", value: "Nature" }, 
-                                { label: "Psychology", value: "Psychology" },
-                                { label: 'Music', value:'Music'},
-                                { label: 'Programming' , value : 'Programming'},
-                                { label: 'Project Management', value : 'Project Management'},
-                                { label: 'Other', value : 'Other'}
-                            ];
-
+          const optionsArray = [{ label: "Select Type" ,value :"" },{ label: "Nature", value: "Nature" }, { label: "Psychology", value: "Psychology" },{label : 'Music',value:'Music'},{label: 'Programming' , value : 'Programming'},{label: 'Project Management' , value : 'Project Management'},{label: 'Other' , value : 'Other'}];
         if (!post) {
             return <div>Loading....</div>
         }
@@ -49,7 +41,7 @@ export default class PostEdit extends React.Component {
                     <LongTextField name="description"/>
 
                     <button type='submit'>Edit post</button>
-                    <button onClick={() => history.push('/posts')}>Back to posts</button>
+                    <button onClick={() => history.push('/posts/reactive')}>Back to posts</button>
                 </AutoForm>
             </div>
         )

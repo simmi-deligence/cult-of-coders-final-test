@@ -14,7 +14,18 @@ export default new SimplSchema({
     },
     createdAt : {
     	type : Date,
-    	optional: true
+    	autoValue: function()
+        {
+            console.log(this.isSet)
+            if (!this.operator) {
+                if (!this.isSet || this.value === null || this.value === "")
+                return new Date();
+            }
+            else
+            {
+                this.unset();
+            }
+        }
     },
     type: {
         type: String

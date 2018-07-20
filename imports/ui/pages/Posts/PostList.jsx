@@ -1,4 +1,6 @@
 import React from 'react';
+import Security from '/imports/api/security';
+import { Route, Redirect } from 'react-router';
 
 export default class PostList extends React.Component {
     constructor() {
@@ -8,32 +10,38 @@ export default class PostList extends React.Component {
     }
 
     componentDidMount() {
-        Meteor.call('post.list', (err, posts) => {
+        Meteor.call('secured.post_list', (err, posts) => {
             this.setState({posts});
         });
     }
 
     updateViews(post){
-        // Update user views
-         Meteor.call('post.update', this.props.match.params._id,post, (err) => {
-            if (err) {
-                return alert(err.reason);
-            }
-            else
-            {
-                this.props.history.push("/posts/view/" + post._id);
-            }
-        });
+        this.props.history.push("/posts/view/" + post._id);     
+    }
 
+    removePostAndComments = (postId) => {
+        Meteor.call('secured.post_remove',postId,(err)=> {
+                if(err)
+                    return alert(err.reason);  
+                else
+                {
+
+                     Meteor.call('secured.post_list', (err, posts) => {
+                        this.setState({posts});
+                    });
+                }
+
+            }
+        );
+
+        //Rerenders the view when deleted the record
+        window.location.reload();
     }
 
     render() {
         const {posts} = this.state;
         const {history} = this.props;
-        const pStyle = {
-            backgroundColor: '#ccc',
-            textAlign: 'center'
-        };
+
         var datestr = 'No date';
         if (!posts) {
             return <div>Loading....</div>
@@ -53,14 +61,18 @@ export default class PostList extends React.Component {
 
                              <button  onClick={()=>{this.updateViews(post)}}>View Details
                             </button>
-                                <button onClick={() => {
-                                    history.push("/posts/edit/" + post._id)
-                                }}> Edit post
-                                </button>
+                            {Meteor.user() && Meteor.user()._id==post.userId ? 
+                                (<div><button onClick={() => { history.push("/posts/edit/" + post._id)  }}> Edit post </button>
+
+                                <button onClick={()=>{ if (window.confirm('Are you sure you wish to delete this post?')) this.removePostAndComments(post._id)}}>Remove Post</button></div>
+
+                                ) : ''}
+                                
                             </div>
                         )
                     })}
-                <button onClick={() => history.push('/posts/create')}>Create a new post</button>
+                {Meteor.user() ? (<div><button onClick={() => history.push('/posts/create')}>Create a new post</button><button onClick={() => Meteor.logout(() => this.props.history.push('/login'))}>Logout</button></div>)
+                 : ''}
             </div>
         )
     }

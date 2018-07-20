@@ -22,8 +22,19 @@ export default class Register extends Component {
         });
     };
 
+    componentWillMount(){
+
+         //Apply Authentication and redirect to login page 
+        if(Meteor.loggingIn())
+        {
+            return ( <div>{this.props.history.push('/login')}</div>);
+        }
+    }
+
 
     render() {
+       
+
         return (
             <div className="authentication">
                 <AutoForm schema={RegisterSchema} onSubmit={this.onSubmit}>

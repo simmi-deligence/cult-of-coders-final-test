@@ -5,8 +5,6 @@ Meteor.methods({
     'post.create'(post) {
         post.createdAt = new Date();
 
-console.log(post);
-
         Posts.insert(post);
     },
 

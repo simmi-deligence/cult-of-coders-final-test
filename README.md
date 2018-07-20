@@ -1,9 +1,11 @@
-# Hello and Welcome!
-Meteor-Tuts is one of the projects closest to our hearts designed as a useful tool for any programmer
-that wants to step up his/her game. Navigating through this complex but rather easy to understand tutorial you will be 
-accompanied by video tutorials for each chapter and for that access www.meteor-tuts.com. 
-We recommend you to take it step by step in order to achieve a better understanding and mastery of the MeteorJS framework, so
-we created for you several branches, each of them being an iteration of the tutorial
+# Project Title
+Meteor React Blog.
+
+
+# Descripition
+In this Project we have created an easy to understand blog, where a user can login.
+After login user can create their own Posts and comment on that. The post will be available to another users reactivly and they can comment on that.Post owner can delete his/her posts and any of the comments and the Comment owner can delete their own comment.
+
 
 # Installation
 - Clone this repository

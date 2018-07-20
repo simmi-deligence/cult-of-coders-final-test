@@ -18,19 +18,31 @@ export default class Login extends React.Component {
     };
 
     render() {
-        return (
-            <div className="authentication">
-                <AutoForm onSubmit={this.handleLogin} schema={LoginSchema}>
-                    <ErrorsField/>
-                    <AutoField name="email" placeholder="Email"/>
-                    <AutoField name="password" type="password" placeholder="Password"/>
-                    <button type="submit">Login</button>
+//if(Meteor.loggingIn())
+      //  console.log(Meteor.loggingIn());
 
-                </AutoForm>
+        if(!Meteor.loggingIn())
+        {
+            return (
+                <div className="authentication">
+                    <AutoForm onSubmit={this.handleLogin} schema={LoginSchema}>
+                        <ErrorsField/>
+                        <AutoField name="email" placeholder="Email"/>
+                        <AutoField name="password" type="password" placeholder="Password"/>
+                        <button type="submit">Login</button>
 
-                <button onClick={() => this.props.history.push('/register')}>Register</button>
-            </div>
-        )
+                    </AutoForm>
+
+                    <button onClick={() => this.props.history.push('/register')}>Register</button>
+                </div>
+            );
+        }
+        else
+            return (<div>
+                    <button onClick={() => Meteor.logout(() => this.props.history.push('/login'))}>Logout</button>
+                    <button onClick={() => this.props.history.push('/posts')}>posts</button>
+                </div>);
+
     }
 }
 
