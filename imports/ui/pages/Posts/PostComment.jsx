@@ -5,10 +5,12 @@ import { Route, Redirect } from 'react-router';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Comments } from '/db';
 import ReactDom from 'react-dom';
-class CommentCreate extends React.Component {
-    constructor() {
-        super();
-        this.state = { comments: null };       
+export default class CommentCreate extends React.Component {
+    constructor(props) {
+        super(props);
+        //set state from parent
+        this.state = { comments: props.post.comments };   
+
     }
 
     handleSubmit = (comment) => {   
@@ -18,43 +20,38 @@ class CommentCreate extends React.Component {
             if (err) {
                 return alert(err.reason);
             }
-            else
-            {             
-                Meteor.call('secured.post_comments_get',comment,(err,comments)=>{
-                    this.setState({comments});
-                })
-            }      
-        });   
+           
+        }); 
+       
     };
+
+    componentWillReceiveProps(nextProps) {
+      this.setState({ comments: nextProps.post.comments });  
+    }
 
 
     removeComment(comment){
+        
         Meteor.call('secured.remove_comment', comment,(err)=>{
             if(err)
                 alert(err.reason);
-            else
-            {
-                Meteor.call('secured.post_comments_get',comment,(err,comments)=>{
-                    this.setState({comments});
-                })
-            }  
+           
         });
     }
     changeDate(dateChange){
-            if(dateChange) 
-            {  
-                date = new Date(dateChange);
-                return date.toDateString();
-            }
+        if(dateChange) 
+        {  
+            date = new Date(dateChange);
+            return date.toDateString();
+        }
     }
 
     render() 
     {
-            const { commentData }  = this.props;      
-            if(this.state.comments)
-            this.props.commentData = this.state.comments;
-            const {history} = this.props;   
-
+        const commentData = this.state.comments;
+        
+           if(commentData)
+           {
             return (
                 <div className="postComment">
                     {
@@ -87,17 +84,18 @@ class CommentCreate extends React.Component {
                     }
                    
                 </div>
-            )
+                )
+            }
+            else
+                return (<div>{ 
+                        Meteor.user() ? 
+                        <AutoForm  onSubmit={this.handleSubmit.bind(this)} schema={CommentSchema}>
+                         <ErrorsField/>
+                            <LongTextField name="comment" ref="comment"/>
+                            <button type='submit'>Add Comment</button>      
+                        </AutoForm>  : '' 
+                    }</div>);
     }
 }
 
 
-export default withTracker(props => {
-    const handle = Meteor.subscribe('comments');
-  
-    return {
-        loading : !handle.ready(),
-        commentData : Comments.find({ postId:props.match.params._id }, { sort : { createdAt : -1} }).fetch(),
-        ...props
-    }
-})(CommentCreate);

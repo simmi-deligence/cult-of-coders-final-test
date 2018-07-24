@@ -3,10 +3,7 @@ import { Comments } from '/db';
 import Security from '/imports/api/security';
 
 Meteor.methods({
-	'secured.post_comments_get'(comment){
 	
-		return Comments.find({ postId:comment.postId }, { sort : { createdAt : -1} }).fetch();
-	},
 
 	'secured.post_comments_create'(post,comment){
 		Security.checkLoggedIn(this.userId);
@@ -22,7 +19,6 @@ Meteor.methods({
 
 	'secured.remove_comment'(comment){
 		Security.checkLoggedIn(this.userId);
-		if(comment.userId == this.userId)
 		Comments.remove(comment._id);
 
 	},

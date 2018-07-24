@@ -34,8 +34,7 @@ export default class PostList extends React.Component {
             }
         );
 
-        //Rerenders the view when deleted the record
-        window.location.reload();
+    
     }
 
     render() {
@@ -46,6 +45,7 @@ export default class PostList extends React.Component {
         if (!posts) {
             return <div>Loading....</div>
         }
+
 
         return (
             <div className="post">

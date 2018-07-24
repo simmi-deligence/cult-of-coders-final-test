@@ -1,6 +1,8 @@
 import React from 'react';
 import {withTracker} from 'meteor/react-meteor-data';
 import {Posts} from '/db';
+import { createQuery } from 'meteor/cultofcoders:grapher';
+import {ReactiveVar} from 'meteor/reactive-var';
 
 class PostListReactive extends React.Component {
    constructor() {
@@ -28,12 +30,13 @@ class PostListReactive extends React.Component {
             }
         });  
     }
+
     render() {
         const { history,posts} = this.props;
-        
+       
         const postsD = {};
         if(this.state.posts)
-        this.props.posts = this.state.posts
+        this.props.posts = this.state.posts;
 
         var datestr = 'No date';
         if (!posts) {
@@ -74,13 +77,17 @@ class PostListReactive extends React.Component {
     }
 }
 
-
+const postSet = new ReactiveVar([]);
 export default withTracker(props => {
     const handle = Meteor.subscribe('posts');
+    Meteor.call('secured.post_list', (err, posts) => {
+        postSet.set(posts);
+    });
 
     return {
         loading: !handle.ready(),
-        posts: Posts.find({},{sort :{createdAt : -1}}).fetch(),
+        posts : postSet.get(),
         ...props
-    };
+     };
 })(PostListReactive);
+

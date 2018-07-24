@@ -11,7 +11,7 @@ export default class Login extends React.Component {
         const {email, password} = data;
         Meteor.loginWithPassword(email, password, (err) => {
             if (!err) {
-                return this.props.history.push('/posts');
+                return this.props.history.push('/posts/reactive');
             }
             alert(err.reason);
         });
@@ -40,7 +40,7 @@ export default class Login extends React.Component {
         else
             return (<div>
                     <button onClick={() => Meteor.logout(() => this.props.history.push('/login'))}>Logout</button>
-                    <button onClick={() => this.props.history.push('/posts')}>posts</button>
+                    <button onClick={() => this.props.history.push('/posts/reactive')}>posts</button>
                 </div>);
 
     }
