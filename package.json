@@ -4,11 +4,12 @@
   "scripts": {
     "start": "meteor run --port 4000",
     "test": "meteor test --driver-package practicalmeteor:mocha",
-    "lint": "eslint . --ext .jsx --fix",
-    "precommit": "npm lint",
-    "prepush": "npm test"
+    "lint": "eslint . .jsx --fix",
+    "precommit": "lint-staged"
   },
-
+  "lint-staged": {
+    "*.{js,jsx}": ["eslint --fix", "git add"]
+  },
   "dependencies": {
     "@babel/runtime": "^7.0.0-beta.36",
     "bcrypt": "^1.0.3",
