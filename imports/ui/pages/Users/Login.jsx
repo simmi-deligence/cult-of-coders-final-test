@@ -5,6 +5,9 @@ import SimpleSchema from 'simpl-schema';
 export default class Login extends React.Component {
     constructor() {
         super();
+        this.redirectLogout.bind(this);
+        this.redirectLogin.bind(this);
+        this.redirectList.bind(this);
     }
 
     handleLogin = (data) => {
@@ -17,9 +20,29 @@ export default class Login extends React.Component {
         });
     };
 
+    redirectLogout = () => {
+        if(this.props.history)
+            Meteor.logout(() => this.props.history.push('/login'));
+    }
+
+    redirectLogin = () => {
+        if(this.props.history)
+            this.props.history.push('/login');
+    }
+
+    redirectList = () => {
+        if(this.props.history)
+            this.props.history.push('/posts/reactive');
+    }
+
+    redirectRegister = () => {
+        if(this.props.history)
+            this.props.history.push('/register');
+    }
+
     render() {
-//if(Meteor.loggingIn())
-      //  console.log(Meteor.loggingIn());
+        //if(Meteor.loggingIn())
+        //  console.log(Meteor.loggingIn());
 
         if(!Meteor.loggingIn())
         {
@@ -33,15 +56,15 @@ export default class Login extends React.Component {
 
                     </AutoForm>
 
-                    <button onClick={() => this.props.history.push('/register')}>Register</button>
+                    <button onClick={this.redirectRegister}>Register</button>
                 </div>
             );
         }
         else
             return (<div>
-                    <button onClick={() => Meteor.logout(() => this.props.history.push('/login'))}>Logout</button>
-                    <button onClick={() => this.props.history.push('/posts/reactive')}>posts</button>
-                </div>);
+                <button onClick={this.redirectLogout}>Logout</button>
+                <button onClick={this.redirectList}>posts</button>
+            </div>);
 
     }
 }

@@ -2,41 +2,61 @@ import React from 'react';
 import {withTracker} from 'meteor/react-meteor-data';
 import {Posts} from '/db';
 import { createQuery } from 'meteor/cultofcoders:grapher';
-import {ReactiveVar} from 'meteor/reactive-var';
+import { ReactiveVar } from 'meteor/reactive-var';
+import  EditPost  from './EditPost';
+import DeletePost from './DeletePost';
+import UpdatePostViews  from './UpdatePostViews';
+
 
 class PostListReactive extends React.Component {
-   constructor() {
+    constructor() {
         super();
         this.state = {posts: null};
-        this.updateViews.bind(this);
     }
 
+    
 
-    updateViews(post){
-        // Update user views      
-        this.props.history.push("/posts/view/" + post._id);         
+    updateViews = (post)=>{
+        if(this.props.history)
+            this.props.history.push('/posts/view/' + post._id);
     }
 
+    removePostAndComments(id){
+        if (window.confirm('Are you sure you wish to delete this post?'))
+        {
+            Meteor.call('secured.post_remove',id,(err)=> {
+                if(err)
+                    return alert(err.reason);
+               
+            });
+        }
+    }
 
-    removePostAndComments = (postId) => {
-        Meteor.call('secured.post_remove',postId,(err)=> {
-            if(err)
-                return alert(err.reason);  
-            else
-            {
-                Meteor.call('secured.post_list', (err, posts) => {
-                    this.setState({posts});
-                });
-            }
-        });  
+    redirectCreate = () => {
+        if(this.props.history)
+            this.props.history.push('/posts/create');
+    }
+
+    redirectEdit = (id) => {
+       
+        if(id)
+        {
+            if(this.props.history)
+                this.props.history.push('/posts/edit/'+id);
+        }
+    }
+
+    redirectLogout = () => {
+        if(this.props.history)
+            Meteor.logout(() => this.props.history.push('/login'));
     }
 
     render() {
         const { history,posts} = this.props;
-       
+        //console.log(posts)
         const postsD = {};
         if(this.state.posts)
-        this.props.posts = this.state.posts;
+            this.props.posts = this.state.posts;
 
         var datestr = 'No date';
         if (!posts) {
@@ -46,31 +66,50 @@ class PostListReactive extends React.Component {
         return (
             <div className="post">
                 {
-                    posts.map((post) => {
+                    posts.map((post,i) => {
                         return (
                             <div key={post._id}>
                            
                                 <p>Post id: {post._id} </p>
+                                <p>Auther : {post.author.emails[0].address}</p>
                                 <p>Type : { post.type}</p>
                                 <p>Post title: {post.title}</p>
                                 <p> Post Description: {post.description} </p>
 
-                                <button  onClick={()=>{this.updateViews(post)}}>View Details </button>
-                              {Meteor.user() && Meteor.user()._id==post.userId ? 
-                                (<div><button onClick={() => { history.push("/posts/edit/" + post._id)  }}> Edit post </button>
+                                <UpdatePostViews
+                                    key={post._id+1}
+                                    post = {post}
+                                    onClickPostUpdateViews={this.updateViews }
 
-                                <button onClick={()=>{ if (window.confirm('Are you sure you wish to delete this post?')) this.removePostAndComments(post._id)} }>Remove Post</button></div>
-                                ) : ''}
+                                />
+                                
+                                {
+                                    Meteor.user() && Meteor.user()._id==post.userId ?
+                                        (<div> <EditPost
+                                            key={post._id}
+                                            id = {post._id}
+                                            onClickEditPost={this.redirectEdit}
+
+                                        />
+                                        <DeletePost
+                                            key={i}
+                                            id = {post._id}
+                                            onClickRemovePostAndComments={this.removePostAndComments}
+
+                                        /> </div>)
+
+                                        : ''
+                                }
                                 
                             </div>
                         )
                     })}
                     
 
-                    {
-                        Meteor.user() ? (<div><button onClick={() => history.push('/posts/create')}>Create a new post</button><button onClick={() => Meteor.logout(() => this.props.history.push('/login'))
-                    }>Logout</button></div>) : <button onClick={() => {this.props.history.push('/login') }
-                    }>Login</button>}
+                {
+                    Meteor.user() ? (<div><button onClick={ this.redirectCreate }>Create a new post</button><button onClick={ this.redirectLogout }>Logout</button></div>)
+                        : ''
+                }
 
             </div>
         )
@@ -88,6 +127,6 @@ export default withTracker(props => {
         loading: !handle.ready(),
         posts : postSet.get(),
         ...props
-     };
+    };
 })(PostListReactive);
 

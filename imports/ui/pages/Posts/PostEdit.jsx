@@ -1,11 +1,14 @@
 import React from 'react';
 import {AutoForm, AutoField, LongTextField,SelectField,ErrorsField} from 'uniforms-unstyled';
 import PostSchema from '/db/posts/schema';
+import { PostTagsLabels } from '/db/posts/enum/tags';
 
 export default class PostEdit extends React.Component {
     constructor() {
         super();
         this.state = {post: null};
+        this.handleSubmit.bind(this);
+        this.redirectList.bind(this);
     }
 
     componentDidMount() {
@@ -19,29 +22,34 @@ export default class PostEdit extends React.Component {
             if (err) {
                 return alert(err.reason);
             }
-            //alert('Post modified!')
+        //alert('Post modified!')
         });
         this.props.history.push('/posts/reactive');
     };
 
+    redirectList = () => {
+        if(this.props.history)
+            this.props.history.push('/posts/reactive');
+    }
+
     render() {
         const {history} = this.props;
         const {post} = this.state;
-          const optionsArray = [{ label: "Select Type" ,value :"" },{ label: "Nature", value: "Nature" }, { label: "Psychology", value: "Psychology" },{label : 'Music',value:'Music'},{label: 'Programming' , value : 'Programming'},{label: 'Project Management' , value : 'Project Management'},{label: 'Other' , value : 'Other'}];
+         
         if (!post) {
             return <div>Loading....</div>
         }
 
         return (
             <div className="post">
-                <AutoForm onSubmit={this.handleSubmit.bind(this)} schema={PostSchema} model={post}>
-                 <ErrorsField/>
-                 <SelectField name="type" options={optionsArray} />
+                <AutoForm onSubmit={this.handleSubmit} schema={PostSchema} model={post}>
+                    <ErrorsField/>
+                    <SelectField name="type" options={PostTagsLabels} />
                     <AutoField name="title"/>
                     <LongTextField name="description"/>
 
                     <button type='submit'>Edit post</button>
-                    <button onClick={() => history.push('/posts/reactive')}>Back to posts</button>
+                    <button onClick={this.redirectList}>Back to posts</button>
                 </AutoForm>
             </div>
         )

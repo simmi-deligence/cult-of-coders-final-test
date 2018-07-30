@@ -1,0 +1,79 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true
+    },
+    "parser": "babel-eslint",
+    "extends": [   
+      "plugin:meteor/recommended",      
+      "eslint:recommended", 
+      "plugin:react/recommended"
+    ],
+     "parserOptions": {
+        "allowImportExportEverywhere": true,
+        "ecmaFeatures": {
+            "jsx": true
+        }
+    },
+   "plugins": [
+        "meteor",
+        "react"
+    ],
+    "settings": {
+      "import/resolver": "meteor"
+    },
+    "rules": {
+        "react/display-name": [0, { "ignoreTranspilerName": true }],
+        "react/prop-types": [0],
+
+        "no-unused-vars": [0],
+        "no-undef": [0],
+        "indent": [
+            "error",
+            2
+        ],
+        "quotes": [
+            "error",
+            "single",
+            // To allow Template Literals inside Component props.
+            // ex. <Component width={`50%`}/>
+            //
+            { "allowTemplateLiterals": true }
+        ],
+         "react/jsx-filename-extension": [1, {
+            "extensions": [".jsx"]
+        }],
+
+        "react/jsx-no-bind": [2, {
+            "ignoreRefs": false,
+            "allowArrowFunctions": false,
+            "allowFunctions": false,
+            "allowBind": false
+        }],
+        // To allow absolute path imports in Meteor
+        "import/no-absolute-path": [
+          "off"
+        ],
+        // To resolve https://github.com/clayne11/eslint-import-resolver-meteor/issues/17
+        "import/extensions": [
+          "off",
+          "never"
+        ],
+        // Work around until  https://github.com/benmosher/eslint-plugin-import/issues/479 is resolved
+        "import/no-extraneous-dependencies": [
+          "off"
+        ],
+        // To allow `_id` access when retrieving Mongo documents
+        "no-underscore-dangle": [
+          "off"
+        ],
+        "meteor/audit-argument-checks": [0],
+        "indent": ["error", 4],
+        "switch-colon-spacing": [0],
+        "no-invalid-this": [0],
+        "new-cap": [1],
+        "no-trailing-spaces": [2, {
+            "skipBlankLines": true
+        }]
+    }
+}

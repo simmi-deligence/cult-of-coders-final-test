@@ -1,4 +1,7 @@
+import _ from 'underscore';
 import SimplSchema from 'simpl-schema';
+import PostTagsEnum from './enum/tags';
+
 
 export default new SimplSchema({
     title: String,
@@ -27,8 +30,14 @@ export default new SimplSchema({
             }
         }
     },
+
     type: {
-        type: String
-        //optional: true
+        type: String,
+        allowedValues : _.values(PostTagsEnum)
     },
+
+    'type.$': {
+        type: String,
+        allowedValues : _.values(PostTagsEnum)
+    }
 });

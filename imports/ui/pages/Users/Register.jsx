@@ -22,9 +22,9 @@ export default class Register extends Component {
         });
     };
 
-    componentWillMount(){
+    UNSAFE_componentWillMount(){
 
-         //Apply Authentication and redirect to login page 
+        //Apply Authentication and redirect to login page
         if(Meteor.loggingIn())
         {
             return ( <div>{this.props.history.push('/login')}</div>);

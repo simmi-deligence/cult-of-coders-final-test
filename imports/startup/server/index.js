@@ -9,5 +9,6 @@ import '/imports/api/comments/methods';
 
 // Note: the file below is not added on the client, exposure is a server-side concern.
 import '/imports/api/grapher';
+import '/imports/api';
 //import '/imports/api/grapher/exposures';
 
