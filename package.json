@@ -2,15 +2,11 @@
   "name": "meteor-tuts",
   "private": true,
   "scripts": {
-    "start": "meteor run --port 4000",
-    "test": "meteor test --driver-package practicalmeteor:mocha",
-    "lint": "eslint . --ext .jsx --fix"
+    
+    "precommit": "npm test",
+    "prepush": "npm test"
   },
-  "lint-staged": {
-    "*.js": "eslint --fix",
-    "*.jsx": "eslint --fix"
-  },
-  "pre-commit": "lint-staged",
+
   "dependencies": {
     "@babel/runtime": "^7.0.0-beta.36",
     "bcrypt": "^1.0.3",
@@ -34,6 +30,7 @@
     "eslint-plugin-import": "^2.13.0",
     "eslint-plugin-meteor": "^5.0.0",
     "eslint-plugin-react": "^7.10.0",
+    "husky": "^0.14.3",
     "lint-staged": "^7.2.0"
   }
 }

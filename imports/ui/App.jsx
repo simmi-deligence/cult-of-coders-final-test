@@ -4,4 +4,3 @@ export default ({children}) =>
     <div className="app-container" id="app-container">
         {children}
     </div>
-
