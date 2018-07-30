@@ -2,8 +2,10 @@
   "name": "meteor-tuts",
   "private": true,
   "scripts": {
-    
-    "precommit": "npm test",
+    "start": "meteor run --port 4000",
+    "test": "meteor test --driver-package practicalmeteor:mocha",
+    "lint": "eslint . --ext .jsx --fix",
+    "precommit": "npm lint",
     "prepush": "npm test"
   },
 
